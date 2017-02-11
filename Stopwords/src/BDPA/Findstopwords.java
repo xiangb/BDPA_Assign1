@@ -36,7 +36,7 @@ public class Findstopwords extends Configured implements Tool {
 
       job.setMapperClass(Map.class);
       job.setReducerClass(Reduce.class);
-      
+      job.setNumReduceTasks(10);
 
       job.setInputFormatClass(TextInputFormat.class);
       job.setOutputFormatClass(TextOutputFormat.class);
@@ -56,7 +56,7 @@ public class Findstopwords extends Configured implements Tool {
       @Override
       public void map(LongWritable key, Text value, Context context)
               throws IOException, InterruptedException {
-         for (String token: value.toString().split("\\s+")) {
+         for (String token: value.toString().replaceAll("[^a-zA-Z ]", "").split("\\s+")) {
 
         	 	
         	 	word.set(token.toLowerCase());
