@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 
+=======
+*.class
+>>>>>>> c9dacbaa82d66a7f1e62f9c5fdc5907d0e93882c
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
