@@ -40,6 +40,7 @@ public class Findstopwords extends Configured implements Tool {
 
       job.setInputFormatClass(TextInputFormat.class);
       job.setOutputFormatClass(TextOutputFormat.class);
+      
       /* set output as csv file */
       job.getConfiguration().set("mapreduce.output.textoutputformat.separator", ",");
       
