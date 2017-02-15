@@ -73,7 +73,7 @@ public class Findstopwords_10red_comb_compr extends Configured implements Tool {
       @Override
       public void map(LongWritable key, Text value, Context context)
               throws IOException, InterruptedException {
-         for (String token: value.toString().replaceAll("[^a-zA-Z ]", "").split("\\s+")) {
+         for (String token: value.toString().replaceAll("[^a-zA-Z ]", " ").split("\\s+")) {
 
         	 	
         	 	word.set(token.toLowerCase());
