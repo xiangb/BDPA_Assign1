@@ -25,18 +25,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Collections;
 
-public class InvertedIndexFrequence extends Configured implements Tool {
-	
+public class InvertedIndex extends Configured implements Tool {
 
 
-
+  public static enum COUNTER {
+  COUNT_UNIQUE_WORD
+  };
    public static void main(String[] args) throws Exception {
       System.out.println(Arrays.toString(args));
-      int res = ToolRunner.run(new Configuration(), new InvertedIndexFrequence(), args);
+      int res = ToolRunner.run(new Configuration(), new InvertedIndex(), args);
       
       System.exit(res);
    }
@@ -45,7 +43,7 @@ public class InvertedIndexFrequence extends Configured implements Tool {
    public int run(String[] args) throws Exception {
       System.out.println(Arrays.toString(args));
       Job job = new Job(getConf(), "InvertedIndex");
-      job.setJarByClass(InvertedIndexFrequence.class);
+      job.setJarByClass(InvertedIndex.class);
 
       job.setOutputKeyClass(Text.class);
       job.setOutputValueClass(Text.class);
@@ -53,7 +51,7 @@ public class InvertedIndexFrequence extends Configured implements Tool {
       job.setMapperClass(Map.class);
       job.setReducerClass(Reduce.class);
 
-     
+    
 
       job.setInputFormatClass(TextInputFormat.class);
       job.setOutputFormatClass(TextOutputFormat.class);
@@ -117,49 +115,46 @@ public class InvertedIndexFrequence extends Configured implements Tool {
          }
       }
    }
-   
 
-   
    public static class Reduce extends Reducer<Text, Text, Text, Text> {
       @Override
       public void reduce(Text key, Iterable<Text> values, Context context)
               throws IOException, InterruptedException {
-    	  /* Create for each key, the list of unique documents in which we can find it */
-    	  
-    	  HashSet<String> setvalue = new HashSet<String>();
-    	  
-          /* Create a list which will contain the values corresponding to the key */
-    	  
-    	  ArrayList <String> list_val = new ArrayList <String>();
-          
-          for (Text val : values){
-        	  setvalue.add(val.toString());
-              list_val.add(val.toString());
-              
-             }
-          
-                  
-          /* Build a string as a concatenation of the name of the documents in which we find the key (word)*/
-         
-			StringBuilder reducedvalue = new StringBuilder();
-          for (String val : setvalue) {
-        	 
-             if (reducedvalue.length() !=0){
-               reducedvalue.append(",");
-             }
-             
-             /* Count the number of val (document name) in list_val which corresponds to the number
-              * of times the key appears in this document*/
-             
-            reducedvalue.append(val+"#"+Collections.frequency(list_val, val));
-            
-          }
-          
 
-          
-          context.write(key, new Text(reducedvalue.toString()));
-          
-          
-       }
-    }
- }
+         /* Create for each key, the list of unique documents in which we can find it */
+
+         HashSet<String> setvalue = new HashSet<String>();         
+         
+
+         /* Add the value of the key in setvalue */
+
+         for (Text val : values)
+         {
+          setvalue.add(val.toString());
+         }
+         
+
+         /* Build a string as a concatenation of the name of the documents in which we find the key (word)*/
+         StringBuilder reducedvalue = new StringBuilder();
+         for (String val : setvalue) {
+
+            if (reducedvalue.length() !=0){
+              reducedvalue.append(',');
+            }
+
+            reducedvalue.append(val);
+         }
+
+	/* if size of the set of unique document equals 1 then the key is only
+	* in one document so we increment our counter*/ 
+
+         if (setvalue.size()==1)
+         {
+       	  context.getCounter(COUNTER.COUNT_UNIQUE_WORD).increment(1);
+         }
+
+         context.write(key, new Text(reducedvalue.toString()));
+         
+      }
+   }
+}

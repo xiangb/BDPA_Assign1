@@ -100,7 +100,7 @@ public class InvertedIndexFrequence extends Configured implements Tool {
 
         document = new Text(doc);
 
-         for (String token: value.toString().replaceAll("[^a-zA-Z ]", " ").split("\\s+")) {
+         for (String token: value.toString().replaceAll("[^a-zA-Z ]", "").split("\\s+")) {
 
           /* If the word is not in the stop words list we write it*/
         	 	
