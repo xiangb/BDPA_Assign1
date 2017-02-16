@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Collections;
 
 public class InvertedIndexFrequence extends Configured implements Tool {
+	
 
 
 
@@ -51,7 +52,7 @@ public class InvertedIndexFrequence extends Configured implements Tool {
 
       job.setMapperClass(Map.class);
       job.setReducerClass(Reduce.class);
-      job.setCombinerClass(Reduce.class);
+
      
 
       job.setInputFormatClass(TextInputFormat.class);
@@ -124,60 +125,39 @@ public class InvertedIndexFrequence extends Configured implements Tool {
       public void reduce(Text key, Iterable<Text> values, Context context)
               throws IOException, InterruptedException {
 
-          /* Create for each key, the list of uniquement documents 
-
-          HashSet<String> setvalue = new HashSet<String>();
-          for (Text val : values){
-           setvalue.add(val.toString());
-          } */
 
           /* Create a list which contains the values corresponding to the key */
-			ArrayList<String> list = new ArrayList<String>();
 
-			for (Text value : values) {
-				list.add(value.toString());
-			}
-
-			HashSet<String> set = new HashSet<String>(list);
-			StringBuilder builder = new StringBuilder();
-			
-			String prefix = "";
-			for (String value : set) {
-				builder.append(prefix);
-				prefix = ", ";
-				builder.append(value + "#" + Collections.frequency(list, value));
-			}
-
-			context.write(key, new Text(builder.toString()));
-    	  
-    	  
-    	  /*
     	  ArrayList <String> list_val = new ArrayList <String>();
           
           for (Text val : values){
-        	  if (!val.toString().isEmpty()){
+        	  
               list_val.add(val.toString());
-              }
+              
              }
-
+          /* Set of unique document */
+          
           HashSet<String> setvalue = new HashSet<String>(list_val);
           
           /* Build a string as a concatenation of the name of the documents in which we find the key (word)*/
-          /*
+         
 			StringBuilder reducedvalue = new StringBuilder();
           for (String val : setvalue) {
         	 
              if (reducedvalue.length() !=0){
                reducedvalue.append(",");
              }
+             
              /* Count the number of val (document name) in list_val which corresponds to the number
               * of times the key appears in this document*/
-            /* reducedvalue.append(val+"#"+Collections.frequency(list_val, val));
+             
+            reducedvalue.append(val+"#"+Collections.frequency(list_val, val));
+            
           }
-
+          
 
           
-          context.write(key, new Text(reducedvalue.toString()));*/
+          context.write(key, new Text(reducedvalue.toString()));
           
           
        }

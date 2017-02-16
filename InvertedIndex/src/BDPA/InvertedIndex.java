@@ -50,9 +50,8 @@ public class InvertedIndex extends Configured implements Tool {
 
       job.setMapperClass(Map.class);
       job.setReducerClass(Reduce.class);
-      job.setCombinerClass(Reduce.class);
-     
-      job.setNumReduceTasks(1);
+
+    
 
       job.setInputFormatClass(TextInputFormat.class);
       job.setOutputFormatClass(TextOutputFormat.class);
@@ -148,7 +147,11 @@ public class InvertedIndex extends Configured implements Tool {
 
 
 
-         
+         if (setvalue.size()==1)
+         {
+       	  context.getCounter(COUNTER.COUNT_UNIQUE_WORD).increment(1);
+         }
+
          context.write(key, new Text(reducedvalue.toString()));
          
       }
