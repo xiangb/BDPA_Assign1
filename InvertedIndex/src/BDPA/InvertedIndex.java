@@ -145,7 +145,8 @@ public class InvertedIndex extends Configured implements Tool {
             reducedvalue.append(val);
          }
 
-
+	/* if size of the set of unique document equals 1 then the key is only
+	* in one document so we increment our counter*/ 
 
          if (setvalue.size()==1)
          {
